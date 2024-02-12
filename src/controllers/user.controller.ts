@@ -42,7 +42,72 @@ export const userController = (app: Elysia) =>
           throw err;
         }
       })
-      .get("/:id", "getOne")
-      .put("/:id", "update")
-      .delete("/:id", "delete")
+
+      .get(
+        "/:id",
+        async ({ body }) => {
+          try {
+            return await prisma.user.findUnique({
+              where: {
+                id: body.id,
+              },
+            });
+          } catch (err) {
+            throw err;
+          }
+        },
+        {
+          body: t.Object({
+            id: t.Number(),
+          }),
+        }
+      )
+
+      .put(
+        "/:id",
+        async ({ body }) => {
+          try {
+            return await prisma.user.update({
+              where: {
+                id: body.id,
+              },
+              data: {
+                name: body.name,
+                email: body.email,
+                password: body.password,
+              },
+            });
+          } catch (err) {
+            throw err;
+          }
+        },
+        {
+          body: t.Object({
+            id: t.Number(),
+            name: t.String(),
+            email: t.String(),
+            password: t.String(),
+          }),
+        }
+      )
+
+      .delete(
+        "/:id",
+        async ({ body }) => {
+          try {
+            return await prisma.user.delete({
+              where: {
+                id: body.id,
+              },
+            });
+          } catch (err) {
+            throw err;
+          }
+        },
+        {
+          body: t.Object({
+            id: t.Number(),
+          }),
+        }
+      )
   );
