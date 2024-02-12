@@ -14,7 +14,10 @@ export const userController = (app: Elysia) =>
               data: {
                 name: body.name,
                 email: body.email,
-                password: body.password,
+                password: await Bun.password.hash(body.password, {
+                  algorithm: "bcrypt",
+                  cost: 4,
+                }),
               },
             });
           } catch (err) {
